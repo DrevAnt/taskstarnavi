@@ -1,0 +1,10 @@
+.gameBox {
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid black;
+}
+
+.flexField {
+  display: flex;
+  flex-wrap: wrap;
+}
