@@ -1,23 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { useEffect, useState } from "react";
+
+const url = "http://demo1030918.mockable.io";
 
 function App() {
+  const [gameMode, setGameMode] = useState({});
+
+  // fetch modes
+  const getGameMode = () => {
+    return fetch(url)
+      .then((response) => response.json())
+      .then((data) => setGameMode(data));
+  };
+  useEffect(() => {
+    getGameMode();
+  }, []);
+
+  const jsonString = JSON.stringify(gameMode);
+  console.log(Object.values(gameMode));
+  let result = Object.entries(gameMode);
+  let toPrint = result.map((el) => <li>{el[0]}</li>);
+
+  console.log(result);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div>{jsonString}</div>
+      <div>{toPrint}</div>
     </div>
   );
 }
