@@ -5,6 +5,7 @@ const url = "http://demo1030918.mockable.io";
 
 function App() {
   const [gameMode, setGameMode] = useState({});
+  const [fieldSize, setFieldSize] = useState();
 
   // fetch modes
   const getGameMode = () => {
@@ -16,17 +17,25 @@ function App() {
     getGameMode();
   }, []);
 
-  const jsonString = JSON.stringify(gameMode);
-  console.log(Object.values(gameMode));
-  let result = Object.entries(gameMode);
-  let toPrint = result.map((el) => <li>{el[0]}</li>);
+  const modeNamesArr = Object.entries(gameMode);
+  const modeName = modeNamesArr.map((el) => <div key={el[0]}>{el[0]}</div>);
 
-  console.log(result);
+  const handleModeTypeChange = (e) => {
+    let fieldSizeNum = Object.values(gameMode[e.target.value]);
+    setFieldSize(fieldSizeNum[0]);
+  };
 
   return (
     <div className="App">
-      <div>{jsonString}</div>
-      <div>{toPrint}</div>
+      {modeName}
+      {fieldSize}
+      <select onChange={(e) => handleModeTypeChange(e)}>
+        {modeNamesArr.map((element) => (
+          <option key={element[0]} value={element[0]}>
+            {element[0]}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }
