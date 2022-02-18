@@ -5,8 +5,10 @@ import "./App.css";
 const url = "http://demo1030918.mockable.io";
 
 function App() {
+  let optionNames = ["Pick mode"];
   const [gameMode, setGameMode] = useState({});
   const [fieldSize, setFieldSize] = useState();
+  const [selectedOption, setSelectedOption] = useState(optionNames[0]);
 
   // Fetch modes
   const getGameMode = () => {
@@ -20,12 +22,44 @@ function App() {
 
   // Get game mode names
   const modeNamesArr = Object.entries(gameMode);
-  const modeName = modeNamesArr.map((el) => <div key={el[0]}>{el[0]}</div>);
+  console.log(modeNamesArr);
+  // New array for selected options with custom select option
+  let modeNames = modeNamesArr.map((el) =>
+    el[0]
+      .split(/(?=[A-Z])/)
+      .join(" ")
+      .toLowerCase()
+  );
+  // Push to array with select options
+  let upperCaseNames = modeNames.map((el) =>
+    optionNames.push(el[0].toUpperCase() + el.slice(1).toLowerCase())
+  );
 
   // Handle select, pass field size
+  let fieldSizeNum = Object.values(gameMode);
+  fieldSizeNum = fieldSizeNum.map((el) => Object.values(el));
+  console.log(fieldSizeNum);
   const handleModeTypeChange = (e) => {
-    let fieldSizeNum = Object.values(gameMode[e.target.value]);
-    setFieldSize(fieldSizeNum[0]);
+    switch (e.target.value) {
+      case "Pick mode":
+        console.log("Pick mode case");
+        break;
+      case "Easy mode":
+        setFieldSize(fieldSizeNum[0]);
+        break;
+      case "Normal mode":
+        setFieldSize(fieldSizeNum[1]);
+        break;
+      case "Hard mode":
+        setFieldSize(fieldSizeNum[2]);
+        break;
+      default:
+        setFieldSize(5);
+    }
+
+    // Set selected option-name
+    setSelectedOption(e.target.value);
+    console.log(e.target.value);
   };
 
   // Creating array of empty elem for field
@@ -39,13 +73,12 @@ function App() {
 
   return (
     <div className="App">
-      {modeName}
       {fieldSize}
 
-      <select onChange={(e) => handleModeTypeChange(e)}>
-        {modeNamesArr.map((element) => (
-          <option key={element[0]} value={element[0]}>
-            {element[0]}
+      <select value={selectedOption} onChange={(e) => handleModeTypeChange(e)}>
+        {optionNames.map((element, index) => (
+          <option key={element[index]} value={element.value}>
+            {element}
           </option>
         ))}
       </select>
