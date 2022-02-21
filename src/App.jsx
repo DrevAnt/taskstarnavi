@@ -1,7 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import "./App.css";
-import Aside from "./components/Aside/Aside";
 
 const url = "http://demo1030918.mockable.io";
 
@@ -11,6 +10,7 @@ function App() {
   const [fieldSize, setFieldSize] = useState(0);
   const [gameField, setGameField] = useState(0);
   const [selectedOption, setSelectedOption] = useState(optionNames[0]);
+  const [print, setPrint] = useState();
 
   // Fetch modes
   const getGameMode = () => {
@@ -81,13 +81,41 @@ function App() {
       ? setGameField(0)
       : setGameField(
           fieldArray.map((el, index) => (
-            <div key={index} className="gameBox">
+            <div
+              onMouseOver={changeBackground}
+              id={index}
+              key={index}
+              className="gameBox"
+            >
               {el}
             </div>
           ))
         );
   };
   console.log("gameField:", gameField);
+
+  // Handle hover effect
+  const changeBackground = (e) => {
+    // Print rows and columns
+    let row = Math.floor(e.target.id / fieldSize + 1);
+    console.log("e.target.id:", e.target.id, "row:", row);
+    let column =
+      e.target.id == 0 ? 1 : ((+e.target.id + +fieldSize) % +fieldSize) + 1;
+    console.log("column:", column);
+    // Info to print
+    const toPrint = { Row: row, Column: column };
+    const arrOfToPrint = [];
+    arrOfToPrint.push(toPrint);
+
+    if (e.target.className == "gameBox") {
+      e.target.className = "gameBoxActive";
+      setPrint(
+        arrOfToPrint.map((el) => <p key={Math.random()}>{el.toString()}</p>)
+      );
+    } else {
+      e.target.className = "gameBox";
+    }
+  };
 
   return (
     <div className="App">
@@ -113,7 +141,10 @@ function App() {
       >
         {gameField !== 0 ? gameField : ""}
       </div>
-      <div className="aside"></div>
+      <div className="aside">
+        <p>Hovered squares</p>
+        {print}
+      </div>
     </div>
   );
 }
