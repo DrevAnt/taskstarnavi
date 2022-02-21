@@ -1,5 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import "./App.css";
 
 const url = "http://demo1030918.mockable.io";
@@ -68,12 +69,16 @@ function App() {
     // Set selected option-name
     setSelectedOption(e.target.value);
     // console.log("selected option name:", e.target.value);
+
+    // Clear aside div info
+    setPrint("");
   };
 
   // Handle start button
+  let fieldArray = [];
   const handleStart = () => {
     // Creating array of empty elem for field
-    let fieldArray = Array.from({ length: fieldSize * fieldSize });
+    fieldArray = Array.from({ length: fieldSize * fieldSize });
     // console.log("fieldArray:", fieldArray);
 
     // Clear game if "pick mode" or set Game Field
@@ -84,7 +89,7 @@ function App() {
             <div
               onMouseOver={changeBackground}
               id={index}
-              key={index}
+              key={uuidv4()}
               className="gameBox"
             >
               {el}
@@ -113,7 +118,12 @@ function App() {
       console.log("arrOfToPrint:", arrOfToPrint);
       setPrint(
         arrOfToPrint.map((el) => (
-          <p key={Math.random()}>{JSON.stringify(el)}</p>
+          <p className="textPrinted" key={uuidv4()}>
+            {JSON.stringify(el)
+              .replace(/['"]+/g, "")
+              .replace(/[{}]/g, "")
+              .replaceAll(",", " ")}
+          </p>
         ))
       );
     } else {
@@ -125,7 +135,12 @@ function App() {
       arrOfToPrint.splice(result, 1);
       setPrint(
         arrOfToPrint.map((el) => (
-          <p key={Math.random()}>{JSON.stringify(el)}</p>
+          <p className="textPrinted" key={uuidv4()}>
+            {JSON.stringify(el)
+              .replace(/['"]+/g, "")
+              .replace(/[{}]/g, "")
+              .replaceAll(",", " ")}
+          </p>
         ))
       );
     }
@@ -133,31 +148,38 @@ function App() {
 
   return (
     <div className="App">
-      {fieldSize}
-      <p>Pick mode and press start</p>
+      <div className="wrapper">
+        <div className="game">
+          <h2>Pick mode and press start</h2>
 
-      <select value={selectedOption} onChange={(e) => handleModeTypeChange(e)}>
-        {optionNames.map((element, index) => (
-          <option key={element[index]} value={element.value}>
-            {element}
-          </option>
-        ))}
-      </select>
-      <button onClick={handleStart}>START</button>
+          <select
+            value={selectedOption}
+            onChange={(e) => handleModeTypeChange(e)}
+          >
+            {optionNames.map((element) => (
+              <option key={uuidv4()} value={element.value}>
+                {element}
+              </option>
+            ))}
+          </select>
+          <button onClick={handleStart}>START</button>
 
-      <div
-        className="flexField"
-        style={
-          fieldSize > 0
-            ? { width: `${fieldSize * 2.2}rem` }
-            : { display: "none" }
-        }
-      >
-        {gameField !== 0 ? gameField : ""}
-      </div>
-      <div className="aside">
-        <p>Hovered squares</p>
-        {print}
+          <div
+            className="flexField"
+            style={
+              fieldSize > 0
+                ? { width: `${fieldSize * 2.2}rem` }
+                : { display: "none" }
+            }
+          >
+            {gameField !== 0 ? gameField : ""}
+          </div>
+        </div>
+
+        <div className="aside">
+          <h2>Hovered squares</h2>
+          {print}
+        </div>
       </div>
     </div>
   );
