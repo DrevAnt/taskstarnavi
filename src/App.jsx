@@ -152,23 +152,28 @@ function App() {
         <div className="game">
           <h2>Pick mode and press start</h2>
 
-          <select
-            value={selectedOption}
-            onChange={(e) => handleModeTypeChange(e)}
-          >
-            {optionNames.map((element) => (
-              <option key={uuidv4()} value={element.value}>
-                {element}
-              </option>
-            ))}
-          </select>
-          <button onClick={handleStart}>START</button>
+          <div className="chooseStart">
+            <select
+              className="selectStart"
+              value={selectedOption}
+              onChange={(e) => handleModeTypeChange(e)}
+            >
+              {optionNames.map((element) => (
+                <option key={uuidv4()} value={element.value}>
+                  {element}
+                </option>
+              ))}
+            </select>
+            <button className="btnStart" onClick={handleStart}>
+              START
+            </button>
+          </div>
 
           <div
             className="flexField"
             style={
               fieldSize > 0
-                ? { width: `${fieldSize * 2.2}rem` }
+                ? { width: `${fieldSize * 2.7}rem` }
                 : { display: "none" }
             }
           >
