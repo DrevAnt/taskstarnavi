@@ -24,7 +24,7 @@ function App() {
 
   // Get game mode names
   const modeNamesArr = Object.entries(gameMode);
-  console.log("modeNamesArr:", modeNamesArr);
+  // console.log("modeNamesArr:", modeNamesArr);
 
   // New array for selected options with custom select option
   let modeNames = modeNamesArr.map((el) =>
@@ -41,7 +41,7 @@ function App() {
   // Handle select, pass field size
   let fieldSizeNum = Object.values(gameMode);
   fieldSizeNum = fieldSizeNum.map((el) => Object.values(el));
-  console.log("fieldSizeNum:", fieldSizeNum);
+  // console.log("fieldSizeNum:", fieldSizeNum);
 
   const handleModeTypeChange = (e) => {
     // Clear fields
@@ -67,14 +67,14 @@ function App() {
 
     // Set selected option-name
     setSelectedOption(e.target.value);
-    console.log("selected option name:", e.target.value);
+    // console.log("selected option name:", e.target.value);
   };
 
   // Handle start button
   const handleStart = () => {
     // Creating array of empty elem for field
     let fieldArray = Array.from({ length: fieldSize * fieldSize });
-    console.log("fieldArray:", fieldArray);
+    // console.log("fieldArray:", fieldArray);
 
     // Clear game if "pick mode" or set Game Field
     setSelectedOption === "Pick mode"
@@ -92,28 +92,42 @@ function App() {
           ))
         );
   };
-  console.log("gameField:", gameField);
+  // console.log("gameField:", gameField);
 
   // Handle hover effect
+  const arrOfToPrint = [];
   const changeBackground = (e) => {
     // Print rows and columns
     let row = Math.floor(e.target.id / fieldSize + 1);
-    console.log("e.target.id:", e.target.id, "row:", row);
+    // console.log("e.target.id:", e.target.id, "row:", row);
     let column =
       e.target.id == 0 ? 1 : ((+e.target.id + +fieldSize) % +fieldSize) + 1;
-    console.log("column:", column);
+    // console.log("column:", column);
+
     // Info to print
     const toPrint = { Row: row, Column: column };
-    const arrOfToPrint = [];
-    arrOfToPrint.push(toPrint);
 
     if (e.target.className == "gameBox") {
       e.target.className = "gameBoxActive";
+      arrOfToPrint.push(toPrint);
+      console.log("arrOfToPrint:", arrOfToPrint);
       setPrint(
-        arrOfToPrint.map((el) => <p key={Math.random()}>{el.toString()}</p>)
+        arrOfToPrint.map((el) => (
+          <p key={Math.random()}>{JSON.stringify(el)}</p>
+        ))
       );
     } else {
       e.target.className = "gameBox";
+      let deleteInfo = (el) => {
+        el.row == row && el.column == column ? el : null;
+      };
+      let result = arrOfToPrint.findIndex(deleteInfo);
+      arrOfToPrint.splice(result, 1);
+      setPrint(
+        arrOfToPrint.map((el) => (
+          <p key={Math.random()}>{JSON.stringify(el)}</p>
+        ))
+      );
     }
   };
 
